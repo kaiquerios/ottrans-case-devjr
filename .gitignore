@@ -1,6 +1,16 @@
+# Ambientes e cache Python
 .venv/
-.venv-1/
+.venv-*/
 __pycache__/
-.pytest_cache/
 *.py[cod]
+.pytest_cache/
+
+# Segredos e configurações locais
 .env
+.env.*
+
+# Arquivos temporários do sistema/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

@@ -1,5 +1,12 @@
 import sqlite3
+from pathlib import Path
+
 import pandas as pd
+
+RAIZ = Path(__file__).resolve().parents[1]
+DADOS_BRUTOS = RAIZ / "data" / "raw"
+DADOS_TRATADOS = RAIZ / "data" / "processed"
+BANCO = RAIZ / "data" / "database" / "demanda.db"
 
 COLUNAS = [
     "DataMovimento",
@@ -46,10 +53,10 @@ def carregar_arquivo(arquivo, tem_cabecalho, formato_data):
 
 def executar_etl():
     janeiro = carregar_arquivo(
-        "demanda_202201.csv", False, "%Y-%m-%d"
+        DADOS_BRUTOS / "demanda_202201.csv", False, "%Y-%m-%d"
     )
     fevereiro = carregar_arquivo(
-        "demanda_202202.csv", True, "%d/%m/%Y"
+        DADOS_BRUTOS / "demanda_202202.csv", True, "%d/%m/%Y"
     )
 
     base = pd.concat([janeiro, fevereiro], ignore_index=True)
@@ -66,7 +73,8 @@ def executar_etl():
 
 
 def salvar_sqlite(base):
-    with sqlite3.connect("demanda.db") as conexao:
+    BANCO.parent.mkdir(parents=True, exist_ok=True)
+    with sqlite3.connect(BANCO) as conexao:
         base.to_sql(
             "demanda",
             conexao,
@@ -79,13 +87,14 @@ def salvar_sqlite(base):
             conexao,
         )
 
-        print("Banco criado: demanda.db")
+        print(f"Banco criado: {BANCO.relative_to(RAIZ)}")
         print("Registros gravados:", total.loc[0, "total"])
 
 
 if __name__ == "__main__":
     base = executar_etl()
-    base.to_csv("demanda_tratada.csv", index=False, encoding="utf-8")
+    DADOS_TRATADOS.mkdir(parents=True, exist_ok=True)
+    base.to_csv(DADOS_TRATADOS / "demanda_tratada.csv", index=False, encoding="utf-8")
     salvar_sqlite(base)
 
     print("ETL concluído.")

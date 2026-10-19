@@ -1,0 +1,6 @@
+[client]
+# Oculta o menu de ferramentas do Streamlit para visitantes.
+toolbarMode = "minimal"
+
+[theme]
+base = "dark"

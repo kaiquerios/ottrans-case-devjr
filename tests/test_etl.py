@@ -1,12 +1,14 @@
 import sqlite3
+import sys
 from pathlib import Path
 
 import pandas as pd
 
-from script import executar_etl
+RAIZ = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(RAIZ / "scripts"))
+from etl import executar_etl
 
-PASTA = Path(__file__).parent
-BANCO = PASTA / "demanda.db"
+BANCO = RAIZ / "data" / "database" / "demanda.db"
 
 
 def test_etl_retorna_registros():

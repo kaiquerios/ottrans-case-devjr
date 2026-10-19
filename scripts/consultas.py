@@ -1,8 +1,9 @@
 import sqlite3
 from pathlib import Path
 
-BANCO = Path(__file__).parent / "demanda.db"
-ARQUIVO_SQL = Path(__file__).parent / "consultas.sql"
+RAIZ = Path(__file__).resolve().parents[1]
+BANCO = RAIZ / "data" / "database" / "demanda.db"
+ARQUIVO_SQL = RAIZ / "scripts" / "consultas.sql"
 
 with sqlite3.connect(BANCO) as conexao:
     consultas = ARQUIVO_SQL.read_text(encoding="utf-8")
